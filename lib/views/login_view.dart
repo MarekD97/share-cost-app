@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_cost_app/routes.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -10,6 +11,12 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
+    void navigateToSignupView() {
+      Navigator.pushNamed(context, Routes.signup);
+    }
+
+    void onSubmitLogin() {}
+
     return Scaffold(
       appBar: AppBar(title: const Text('Login to App')),
       body: Center(
@@ -27,10 +34,12 @@ class _LoginViewState extends State<LoginView> {
                   border: OutlineInputBorder(), labelText: 'Password'),
             ),
             const SizedBox(height: 100.0),
-            ElevatedButton(onPressed: () {}, child: const Text('Login')),
+            ElevatedButton(
+                onPressed: onSubmitLogin, child: const Text('Login')),
             const SizedBox(height: 10.0),
             TextButton(
-                onPressed: () {}, child: const Text('Create new account'))
+                onPressed: navigateToSignupView,
+                child: const Text('Create new account'))
           ],
         ),
       ),
