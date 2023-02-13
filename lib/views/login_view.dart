@@ -15,7 +15,10 @@ class _LoginViewState extends State<LoginView> {
       Navigator.pushNamed(context, Routes.signup);
     }
 
-    void onSubmitLogin() {}
+    void onSubmitLogin() {
+      // TODO: Implement login feature
+      Navigator.pushNamed(context, Routes.dashboard);
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login to App')),
