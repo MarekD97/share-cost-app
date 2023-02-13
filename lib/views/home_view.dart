@@ -13,7 +13,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      Navigator.pushNamed(context, Routes.login);
+      Navigator.pushReplacementNamed(context, Routes.login);
     });
     super.initState();
   }
