@@ -17,7 +17,7 @@ class _LoginViewState extends State<LoginView> {
 
     void onSubmitLogin() {
       // TODO: Implement login functionality
-      Navigator.pushNamed(context, Routes.dashboard);
+      Navigator.pushNamed(context, Routes.expenseList);
     }
 
     return Scaffold(
