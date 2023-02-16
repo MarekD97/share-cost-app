@@ -62,11 +62,14 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
               TextField(
                 controller: _dateController,
                 keyboardType: TextInputType.none,
+                showCursor: false,
                 onTap: () {
                   _selectDate(context);
                 },
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Date'),
+                    border: OutlineInputBorder(),
+                    labelText: 'Date',
+                    suffixIcon: Icon(Icons.calendar_month)),
               ),
               const SizedBox(height: 20.0),
               const TextField(
