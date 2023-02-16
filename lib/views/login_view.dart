@@ -12,11 +12,11 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     void navigateToSignupView() {
-      Navigator.pushNamed(context, Routes.signup);
+      Navigator.pushReplacementNamed(context, Routes.signup);
     }
 
     void onSubmitLogin() {
-      // TODO: Implement login feature
+      // TODO: Implement login functionality
       Navigator.pushNamed(context, Routes.dashboard);
     }
 
@@ -28,11 +28,15 @@ class _LoginViewState extends State<LoginView> {
           shrinkWrap: true,
           children: [
             const TextField(
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Email'),
             ),
             const SizedBox(height: 20.0),
             const TextField(
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
               decoration: InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Password'),
             ),
