@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1067451480078",
+    "project_id": "share-cost-app",
+    "storage_bucket": "share-cost-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067451480078:android:6f6a55b52252a1fa46a45f",
+        "android_client_info": {
+          "package_name": "com.example.share_cost_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067451480078-j6d0r6vjidouopuu4aoo51721q6l0g04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfQSkXpRJgeH9fHp4qcWKIsO1ktXvWPcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067451480078-j6d0r6vjidouopuu4aoo51721q6l0g04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
