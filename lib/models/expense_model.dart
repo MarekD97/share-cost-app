@@ -16,14 +16,14 @@ class Expense {
       required this.category,
       required this.createdAt});
 
-  static fromJson(Map<String, dynamic> json) => Expense(
+  static Expense fromJson(Map<String, dynamic> json) => Expense(
         name: json['name'],
         paidBy: Person.fromJson(json['paidBy']),
         paidFor: List<Person>.from(
             json['paidFor'].map((person) => Person.fromJson(person))),
         amountSpent: json['amountSpent'],
         category: json['category'],
-        createdAt: DateTime(json['date']),
+        createdAt: DateTime.parse(json['createdAt'])
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

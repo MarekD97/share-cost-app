@@ -9,12 +9,12 @@ class ExpenseList {
   ExpenseList(
       {required this.expenses, required this.members, required this.createdAt});
 
-  static fromJson(Map<String, dynamic> json) => ExpenseList(
+  static ExpenseList fromJson(Map<String, dynamic> json) => ExpenseList(
       expenses: List.from(
           json['expenses'].map((expense) => Expense.fromJson(expense))),
       members:
           List.from(json['members'].map((member) => Person.fromJson(member))),
-      createdAt: DateTime(json['createdAt']));
+      createdAt: DateTime.parse(json['createdAt']));
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'expenses': expenses.map((expense) => expense.toJson()).toList(),
