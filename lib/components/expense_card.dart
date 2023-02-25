@@ -5,7 +5,7 @@ class ExpenseCard extends StatelessWidget {
       : super(key: key);
 
   final String? title;
-  final double? price;
+  final num? price;
   final DateTime? date;
 
   final String currency = 'zł';
@@ -20,7 +20,8 @@ class ExpenseCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(title ?? ''),
-              Text(price != null ? '${price!.toStringAsFixed(2)} $currency' : '')
+              Text(
+                  price != null ? '${price!.toStringAsFixed(2)} $currency' : '')
             ],
           ),
           subtitle: Text(date != null ? date!.toIso8601String() : '')),

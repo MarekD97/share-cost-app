@@ -8,7 +8,7 @@ class Expense {
   String name;
   Person paidBy;
   List<Person> paidFor;
-  double amountSpent;
+  num amountSpent;
   String category;
   DateTime createdAt;
 

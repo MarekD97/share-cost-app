@@ -1,24 +1,27 @@
-import 'package:share_cost_app/models/expense_model.dart';
 import 'package:share_cost_app/models/person_model.dart';
+import 'package:share_cost_app/models/expense_model.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
-class ExpenseList {
-  String id;
-  List<Expense> expenses;
-  List<Person> members;
-  DateTime createdAt;
+class Group {
+  final String id;
+  final String name;
+  final List<Expense> expenses;
+  final List<Person> members;
+  final DateTime createdAt;
 
-  ExpenseList(
+  Group(
       {String? id,
+      required this.name,
       required this.expenses,
       required this.members,
       required this.createdAt})
       : id = id ?? uuid.v4();
 
-  static ExpenseList fromJson(Map<String, dynamic> json) => ExpenseList(
+  static Group fromJson(Map<String, dynamic> json) => Group(
       id: json['id'],
+      name: json['name'],
       expenses: List.from(
           json['expenses'].map((expense) => Expense.fromJson(expense))),
       members:
@@ -27,6 +30,7 @@ class ExpenseList {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
+        'name': name,
         'expenses': expenses.map((expense) => expense.toJson()).toList(),
         'members': members.map((member) => member.toJson()).toList(),
         'createdAt': createdAt.toString()

@@ -2,6 +2,9 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:share_cost_app/models/expense_model.dart';
+import 'package:share_cost_app/models/person_model.dart';
+import 'package:share_cost_app/services/cloud_firebase_service.dart';
 
 class CreateExpenseView extends StatefulWidget {
   const CreateExpenseView({Key? key}) : super(key: key);
@@ -13,7 +16,10 @@ class CreateExpenseView extends StatefulWidget {
 class _CreateExpenseViewState extends State<CreateExpenseView> {
   DateTime _selectedDate = DateTime.now();
 
+  final _nameController = TextEditingController();
+  final _amountController = TextEditingController();
   final _dateController = TextEditingController();
+  final _paidByController = TextEditingController();
 
   Future _selectDate(context) async {
     DateTime? selectedDate = await showDatePicker(
@@ -33,8 +39,26 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
 
   @override
   Widget build(BuildContext context) {
+    final groupId = (ModalRoute
+        .of(context)!
+        .settings
+        .arguments
+    as Map<String, dynamic>)['id'];
+
     void onSubmitForm() {
-      //TODO: create an expense
+      final name = _nameController.text;
+      final paidBy = Person(name: _paidByController.text);
+      final amountSpend = num.parse(_amountController.text
+          .substring(0, _amountController.text.length - 4)
+          .replaceFirst(",", "."));
+      Expense expense = Expense(
+          name: name,
+          paidBy: paidBy,
+          paidFor: [paidBy],
+          amountSpent: amountSpend,
+          category: 'Unknown',
+          createdAt: _selectedDate);
+      CloudFirebaseService.addExpenseToGroup(groupId, expense);
       Navigator.pop(context);
     }
 
@@ -45,18 +69,20 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
             padding: const EdgeInsets.all(20.0),
             shrinkWrap: true,
             children: [
-              const TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Title'),
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Name'),
               ),
               const SizedBox(height: 20.0),
               TextField(
+                controller: _amountController,
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
                   CurrencyTextInputFormatter(locale: 'pl', decimalDigits: 2)
                 ],
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Amount'),
+                    border: OutlineInputBorder(), labelText: 'Amount spent'),
               ),
               const SizedBox(height: 20.0),
               TextField(
@@ -72,8 +98,9 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
                     suffixIcon: Icon(Icons.calendar_month)),
               ),
               const SizedBox(height: 20.0),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: _paidByController,
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: 'Paid by'),
               ),
               const SizedBox(height: 20.0),

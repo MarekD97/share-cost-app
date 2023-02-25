@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:share_cost_app/components/balance_card.dart';
 import 'package:share_cost_app/components/expense_card.dart';
 import 'package:share_cost_app/components/expense_chart.dart';
+import 'package:share_cost_app/models/expense_model.dart';
+import 'package:share_cost_app/models/group_model.dart';
 import 'package:share_cost_app/routes.dart';
+import 'package:share_cost_app/services/cloud_firebase_service.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -21,25 +24,43 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
+    final groupId = (ModalRoute.of(context)!.settings.arguments
+        as Map<String, dynamic>)['id'];
     void navigateToCreateExpenseView() {
-      Navigator.pushNamed(context, Routes.createExpense);
+      Navigator.pushNamed(context, Routes.createExpense,
+          arguments: <String, dynamic>{'id': groupId});
     }
 
-    final Widget expenseTab = ListView.builder(
-      itemBuilder: (context, index) => ExpenseCard(
-          title: 'Item ${index + 1}',
-          price: (index * 10) % 13,
-          date: DateTime.now()),
-      itemCount: 20,
-      padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
-    );
+    final Widget expenseTab = StreamBuilder(
+        stream: CloudFirebaseService.getGroupById(groupId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Group group = Group.fromJson(
+                snapshot.data!.docs[0].data() as Map<String, dynamic>);
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                Expense expense = group.expenses[index];
+                return ExpenseCard(
+                    title: expense.name,
+                    price: expense.amountSpent,
+                    date: expense.createdAt);
+              },
+              itemCount: group.expenses.length,
+              padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
     final Widget balanceTab = ListView(
       padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
       children: [
         ExpenseChart(balance: balance),
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-          child: Text('How to split the expenses?', style: TextStyle(fontSize: 16.0),),
+          child: Text(
+            'How to split the expenses?',
+            style: TextStyle(fontSize: 16.0),
+          ),
         ),
         Column(
           children: List.generate(balance.length, (index) {

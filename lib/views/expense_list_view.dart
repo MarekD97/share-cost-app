@@ -24,7 +24,7 @@ class _ExpenseListViewState extends State<ExpenseListView> {
     }
     
     void navigateToCreateExpenseListView() {
-      Navigator.pushNamed(context, Routes.createExpenseList);
+      Navigator.pushNamed(context, Routes.createGroup);
     }
 
     return Scaffold(
