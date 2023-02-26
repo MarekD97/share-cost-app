@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:share_cost_app/components/group_card.dart';
 import 'package:share_cost_app/models/expense_model.dart';
 import 'package:share_cost_app/models/group_model.dart';
 import 'package:share_cost_app/models/person_model.dart';
@@ -50,25 +50,14 @@ class _GroupListViewState extends State<GroupListView> {
               return Group.fromJson(doc.data() as Map<String, dynamic>);
             }).toList();
             return ListView.builder(
-              itemBuilder: (context, index) {
-                Group group = groups[index];
-                DateFormat format = DateFormat('yyyy-MM-dd, hh:mm');
-                return Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0)),
-                  elevation: 1,
-                  child: ListTile(
-                    title: Text(group.name),
-                    subtitle:
-                        Text('Created at: ${format.format(group.createdAt)}'),
-                    onLongPress: handleOnLongPress,
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.dashboard,
-                          arguments: <String, dynamic>{'id': group.id});
-                    },
-                  ),
-                );
-              },
+              itemBuilder: (context, index) => GroupCard(
+                group: groups[index],
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.dashboard,
+                      arguments: <String, dynamic>{'id': groups[index].id});
+                },
+                onLongPress: handleOnLongPress,
+              ),
               itemCount: groups.length,
             );
           } else {

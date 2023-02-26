@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:share_cost_app/components/balance_card.dart';
 import 'package:share_cost_app/components/expense_card.dart';
 import 'package:share_cost_app/components/expense_chart.dart';
-import 'package:share_cost_app/models/expense_model.dart';
 import 'package:share_cost_app/models/group_model.dart';
 import 'package:share_cost_app/routes.dart';
 import 'package:share_cost_app/services/cloud_firebase_service.dart';
@@ -38,13 +37,8 @@ class _DashboardViewState extends State<DashboardView> {
             Group group = Group.fromJson(
                 snapshot.data!.docs[0].data() as Map<String, dynamic>);
             return ListView.builder(
-              itemBuilder: (context, index) {
-                Expense expense = group.expenses[index];
-                return ExpenseCard(
-                    title: expense.name,
-                    price: expense.amountSpent,
-                    date: expense.createdAt);
-              },
+              itemBuilder: (context, index) =>
+                  ExpenseCard(expense: group.expenses[index]),
               itemCount: group.expenses.length,
               padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
             );
