@@ -35,4 +35,19 @@ class Group {
         'members': members.map((member) => member.toJson()).toList(),
         'createdAt': createdAt.toString()
       };
+
+  List<Map<String, dynamic>> getBalance() {
+    List<Map<String, dynamic>> result =
+        List<Map<String, dynamic>>.empty(growable: true);
+    for (Person member in members) {
+      num total = expenses.fold(0.0, (previousValue, expense) {
+        if (expense.paidBy.id == member.id) {
+          return previousValue + expense.amountSpent;
+        }
+        return previousValue;
+      });
+      result.add({'member': member.name, 'amountSpent': total});
+    }
+    return result;
+  }
 }

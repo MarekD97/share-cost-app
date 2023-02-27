@@ -53,7 +53,7 @@ class _GroupListViewState extends State<GroupListView> {
               itemBuilder: (context, index) => GroupCard(
                 group: groups[index],
                 onTap: () {
-                  Navigator.pushNamed(context, Routes.dashboard,
+                  Navigator.pushNamed(context, Routes.group,
                       arguments: <String, dynamic>{'id': groups[index].id});
                 },
                 onLongPress: handleOnLongPress,

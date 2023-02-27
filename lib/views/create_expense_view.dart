@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_cost_app/models/expense_model.dart';
+import 'package:share_cost_app/models/group_model.dart';
 import 'package:share_cost_app/models/person_model.dart';
 import 'package:share_cost_app/services/cloud_firebase_service.dart';
 
@@ -39,18 +40,24 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
 
   @override
   Widget build(BuildContext context) {
-    final groupId = (ModalRoute
-        .of(context)!
-        .settings
-        .arguments
-    as Map<String, dynamic>)['id'];
+    final groupId = (ModalRoute.of(context)!.settings.arguments
+        as Map<String, dynamic>)['id'];
 
-    void onSubmitForm() {
+    void onSubmitForm() async {
       final name = _nameController.text;
-      final paidBy = Person(name: _paidByController.text);
+      final element = await CloudFirebaseService.getGroupById(groupId).first;
+      Group group =
+          Group.fromJson(element.docs[0].data() as Map<String, dynamic>);
+      final paidBy = group.members.firstWhere(
+          (person) => person.name == _paidByController.text, orElse: () {
+        Person member = Person(name: _paidByController.text);
+        CloudFirebaseService.addMemberToGroup(groupId, member);
+        return member;
+      });
       final amountSpend = num.parse(_amountController.text
           .substring(0, _amountController.text.length - 4)
-          .replaceFirst(",", "."));
+          .replaceFirst(',', '.')
+          .replaceAll(RegExp(r"\s+"), ""));
       Expense expense = Expense(
           name: name,
           paidBy: paidBy,
