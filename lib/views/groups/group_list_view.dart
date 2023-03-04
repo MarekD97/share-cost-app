@@ -15,31 +15,95 @@ class GroupListView extends StatefulWidget {
 
 class _GroupListViewState extends State<GroupListView> {
   List<Group> groups = List<Group>.empty();
+  final _nameController = TextEditingController();
+
+  void handleOnLongPress(Group group) => showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Rename'),
+                onTap: () => _renameGroup(group),
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text('Delete'),
+                onTap: () => _deleteGroup(group),
+              ),
+            ],
+          ));
+
+  void _renameGroup(Group group) {
+    Navigator.pop(context);
+    _nameController.text = group.name;
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              title: const Text('Rename group'),
+              contentPadding: const EdgeInsets.all(8.0),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'New name'),
+                    controller: _nameController,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel')),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                        onPressed: () {
+                          Group newGroup = Group(
+                              id: group.id,
+                              name: _nameController.text,
+                              createdAt: group.createdAt,
+                              members: group.members,
+                              expenses: group.expenses);
+                          CloudFirebaseService.updateGroup(newGroup);
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Rename'))
+                  ],
+                )
+              ],
+            ));
+  }
+
+  void _deleteGroup(Group group) {
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure?'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('No')),
+          TextButton(
+              onPressed: () {
+                CloudFirebaseService.deleteGroupById(group.id);
+                Navigator.pop(context);
+              },
+              child: const Text('Yes')),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    void handleOnLongPress() => showModalBottomSheet(
-        context: context,
-        builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: const Text('Rename'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.delete),
-                  title: const Text('Delete'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ));
-
     return Scaffold(
       appBar: AppBar(title: const Text('List of expense groups')),
       body: StreamBuilder(
@@ -56,7 +120,7 @@ class _GroupListViewState extends State<GroupListView> {
                   Navigator.pushNamed(context, Routes.group,
                       arguments: <String, dynamic>{'id': groups[index].id});
                 },
-                onLongPress: handleOnLongPress,
+                onLongPress: () => handleOnLongPress(groups[index]),
               ),
               itemCount: groups.length,
             );

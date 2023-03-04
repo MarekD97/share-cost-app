@@ -13,10 +13,14 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
+
   @override
   Widget build(BuildContext context) {
-    final groupId = (ModalRoute.of(context)!.settings.arguments
-        as Map<String, dynamic>)['id'];
+    final groupId = (ModalRoute
+        .of(context)!
+        .settings
+        .arguments
+    as Map<String, dynamic>)['id'];
 
     void navigateToCreateExpenseView() {
       Navigator.pushNamed(context, Routes.createExpense,
@@ -46,7 +50,7 @@ class _GroupViewState extends State<GroupView> {
                           ExpenseCard(expense: group.expenses[index]),
                       itemCount: group.expenses.length,
                       padding:
-                          const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
+                      const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
                     );
                   }
                   return const Center(child: CircularProgressIndicator());
@@ -67,22 +71,12 @@ class _GroupViewState extends State<GroupView> {
                     }),
                 const Padding(
                   padding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
                   child: Text(
                     'How to split the expenses?',
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
-                // Column(
-                //   children: List.generate(balance.length, (index) {
-                //     final item = balance[index];
-                //     return BalanceCard(
-                //       fromWho: item['from'] as String,
-                //       forWhom: item['to'] as String,
-                //       amount: item['amount'] as double,
-                //     );
-                //   }).toList(),
-                // )
               ],
             ),
           ],

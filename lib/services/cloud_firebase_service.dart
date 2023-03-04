@@ -34,4 +34,15 @@ class CloudFirebaseService {
           FieldValue.arrayUnion(List.generate(1, (index) => person.toJson()))
     });
   }
+
+  static Future<void> deleteGroupById(String id) async {
+    final result = await groupsCollection.where("id", isEqualTo: id).get();
+    result.docs.first.reference.delete();
+  }
+
+  static Future<void> updateGroup(Group group) async {
+    final result =
+        await groupsCollection.where("id", isEqualTo: group.id).get();
+    result.docs.first.reference.update(group.toJson());
+  }
 }
