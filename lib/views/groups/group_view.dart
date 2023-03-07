@@ -13,14 +13,10 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-
   @override
   Widget build(BuildContext context) {
-    final groupId = (ModalRoute
-        .of(context)!
-        .settings
-        .arguments
-    as Map<String, dynamic>)['id'];
+    final groupId = (ModalRoute.of(context)!.settings.arguments
+        as Map<String, dynamic>)['id'];
 
     void navigateToCreateExpenseView() {
       Navigator.pushNamed(context, Routes.createExpense,
@@ -50,7 +46,7 @@ class _GroupViewState extends State<GroupView> {
                           ExpenseCard(expense: group.expenses[index]),
                       itemCount: group.expenses.length,
                       padding:
-                      const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
+                          const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 60.0),
                     );
                   }
                   return const Center(child: CircularProgressIndicator());
@@ -71,7 +67,7 @@ class _GroupViewState extends State<GroupView> {
                     }),
                 const Padding(
                   padding:
-                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
                   child: Text(
                     'How to split the expenses?',
                     style: TextStyle(fontSize: 16.0),
@@ -80,6 +76,34 @@ class _GroupViewState extends State<GroupView> {
               ],
             ),
           ],
+        ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          color: Theme.of(context).primaryColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Total:',
+                  style: TextStyle(color: Colors.white, fontSize: 16.0)),
+              StreamBuilder(
+                stream: CloudFirebaseService.getGroupById(groupId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Group group = Group.fromJson(
+                        snapshot.data!.docs[0].data() as Map<String, dynamic>);
+                    num totalAmount = group.expenses.fold(
+                        0.0,
+                        (previousValue, element) =>
+                            previousValue + element.amountSpent);
+                    return Text('${totalAmount.toStringAsFixed(2)} zł',
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 16.0));
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: navigateToCreateExpenseView,
